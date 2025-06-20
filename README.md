@@ -1,5 +1,5 @@
 # **DirSpec**
-## NDBC 2D-spectral density data viewer using first two harmonics of truncated fourier series.
+## NDBC 2D-spectral density data viewer using first two harmonics of truncated Fourier series.
 
 ## Features
 1. **Interactive selection** of buoy, timestamp, and frequency band
