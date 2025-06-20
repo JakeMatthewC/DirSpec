@@ -9,7 +9,7 @@
 ## Data Pipeline
 1. Ingests NOAA buoy data from the NDBC api (energy density, r₁, r₂, α₁, α₂, general buoy data)
 2. Cleans and organizes data
-3. Computes mo, Hmo, m_1, and Te - stores to buoy in database for future use
+3. Computes mo, Hm0, m_1, and Te - stores to buoy in database for future use
 4. Computes Fourier-based direction distributions for each frequency bin
 5. Stores outputs in a relation database schema:
    - spectra_parameters: per frequency wave characteristics (Ef, α₁, α₂, r₁, r₂)
