@@ -1,2 +1,26 @@
-# DirSpec
-NDBC 2D-spectral density data viewer using first two harmonics of truncated fourier series.
+# **DirSpec**
+## NDBC 2D-spectral density data viewer using first two harmonics of truncated fourier series.
+
+## Features
+1. **Interactive selection** of buoy, timestamp, and frequency band
+2. **Frequency Spectrum Plot** allows interactive selection of frequency bands
+3. **Polar plot** of directional wave energy distribution
+
+## Data Pipeline
+1. Ingests NOAA buoy data from the NDBC api (energy density, r₁, r₂, α₁, α₂, general buoy data)
+2. Cleans and organizes data
+3. Computes mo, Hmo, m_1, and Te - stores to buoy in database for future use
+4. Computes Fourier-based direction distributions for each frequency bin
+5. Stores outputs in a relation database schema:
+   - spectra_parameters: per frequency wave characteristics (Ef, α₁, α₂, r₁, r₂)
+   - spectra_directional: directional spreading distributions
+  
+## Future Goals
+- Increase the number of available buoys
+- Enhance UI/UX of the dashboard to give user more freedom in analysis
+- Train a ML model to generate idealized directional distributions for comparison to Fourier-based plots
+- Deploy dashboard online
+
+## Preview
+
+![image](https://github.com/user-attachments/assets/42c106e2-5b3f-4bbd-bd42-ccc2c721d0bf)
