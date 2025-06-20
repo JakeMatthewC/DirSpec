@@ -13,7 +13,7 @@ def create_tables(conn):
         cur.execute("""
             CREATE TABLE IF NOT EXISTS buoys (
                 id SERIAL PRIMARY KEY,
-                buoy_id TEXT UNIQUE NOT NULL,
+                station_id TEXT UNIQUE NOT NULL,
                 name TEXT,
                 lat DOUBLE PRECISION,
                 lon DOUBLE PRECISION,
@@ -28,21 +28,20 @@ def create_tables(conn):
                 timestamp TIMESTAMPTZ NOT NULL,
 
                 -- Observational metadata
-                station_id TEXT,                  -- NDBC ID (e.g., '46026')
-                WDIR INTEGER,                     -- Wind direction (degrees)
-                WSPD DOUBLE PRECISION,            -- Wind speed (m/s or knots)
-                GST  DOUBLE PRECISION,            -- Wind gust (m/s or knots)
-                WVHT DOUBLE PRECISION,            -- Significant wave height [m]
-                DPD  DOUBLE PRECISION,            -- Dominant period [s]
-                APD  DOUBLE PRECISION,            -- Average period [s]
-                MWD  DOUBLE PRECISION,            -- Mean wave direction (from) [deg]
-                PRES DOUBLE PRECISION,            -- Atmospheric pressure [hPa]
-                ATMP DOUBLE PRECISION,            -- Air temp [°C]
-                WTMP DOUBLE PRECISION,            -- Water temp [°C]
-                DEWP DOUBLE PRECISION,            -- Dew point [°C]
-                VIS  DOUBLE PRECISION,            -- Visibility [nmi]
-                PTDY DOUBLE PRECISION,            -- Pressure tendency [hPa]
-                TIDE DOUBLE PRECISION,            -- Tide level [ft or m]
+                wdir INTEGER,                     -- Wind direction (degrees)
+                wspd DOUBLE PRECISION,            -- Wind speed (m/s or knots)
+                gst  DOUBLE PRECISION,            -- Wind gust (m/s or knots)
+                wvht DOUBLE PRECISION,            -- Significant wave height [m]
+                dpd  DOUBLE PRECISION,            -- Dominant period [s]
+                apd  DOUBLE PRECISION,            -- Average period [s]
+                mwd  DOUBLE PRECISION,            -- Mean wave direction (from) [deg]
+                pres DOUBLE PRECISION,            -- Atmospheric pressure [hPa]
+                atmp DOUBLE PRECISION,            -- Air temp [°C]
+                wtmp DOUBLE PRECISION,            -- Water temp [°C]
+                dewp DOUBLE PRECISION,            -- Dew point [°C]
+                vis  DOUBLE PRECISION,            -- Visibility [nmi]
+                ptdy DOUBLE PRECISION,            -- Pressure tendency [hPa]
+                tide DOUBLE PRECISION,            -- Tide level [ft or m]
 
                 -- Derived spectral parameters
                 m0   DOUBLE PRECISION,            -- Spectral moment 0
@@ -58,14 +57,24 @@ def create_tables(conn):
         """)
 
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS spectra (
-                id SERIAL PRIMARY KEY,
+            CREATE TABLE IF NOT EXISTS spectra_parameters (
+                time_step_id INTEGER REFERENCES time_steps(id),
+                frequency DOUBLE PRECISION,
+                alpha1 DOUBLE PRECISION,
+                alpha2 DOUBLE PRECISION,
+                r1 DOUBLE PRECISION,
+                r2 DOUBLE PRECISION,
+                energy_density DOUBLE PRECISION,
+                UNIQUE (time_step_id, frequency, direction)
+            );
+        """)
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS spectra_directional (
                 time_step_id INTEGER REFERENCES time_steps(id),
                 frequency DOUBLE PRECISION,
                 direction INTEGER,
-                dir_dist DOUBLE PRECISION,
-                energy_density DOUBLE PRECISION,
-                spectra_ingested BOOLEAN DEFAULT FALSE,
+                spreading DOUBLE PRECISION,
                 UNIQUE (time_step_id, frequency, direction)
             );
         """)
