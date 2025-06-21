@@ -4,7 +4,7 @@ import psycopg2
 import psycopg2.extras
 import sys
 
-buoys = [46026, 41009, 41025]
+buoys = [46026, 44014, 41009, 41025]
 url = r'https://www.ndbc.noaa.gov/data/realtime2/'
 wpm_path = 'D:\DirSpec\data\WPM_spectra.xlsx'
 
@@ -269,10 +269,10 @@ def get_buoy_data():
             # prepare for vectorized calculation
             alpha1 = pd.to_numeric(swdir_row, errors='coerce')
             alpha1 = np.where(~np.isnan(alpha1), met_to_math_dir(alpha1), np.nan)
-            alpha1.astype(float)
+            alpha1 = alpha1.astype(float)
             alpha2 = pd.to_numeric(swdir2_row, errors='coerce')
             alpha2 = np.where(~np.isnan(alpha2), met_to_math_dir(alpha2), np.nan)
-            alpha2.astype(float)
+            alpha2 = alpha2.astype(float)
 
             r1 = pd.to_numeric(swr1_row,errors='coerce')
             r1 = np.array(r1)
