@@ -21,6 +21,6 @@
 - Train a ML model to generate idealized directional distributions for comparison to Fourier-based plots
 - Deploy dashboard online
 
-## Preview
+## Preview of work in progess
 
-![image](https://github.com/user-attachments/assets/42c106e2-5b3f-4bbd-bd42-ccc2c721d0bf)
+![image](https://github.com/user-attachments/assets/dbbc5778-b7cd-47e4-a930-44d3f8bddcee)
