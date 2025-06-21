@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import psycopg2
 from scipy.interpolate import interp1d
+from scipy.ndimage import gaussian_filter1d
 from sqlalchemy import create_engine, text
 
 # Connect to your PostgreSQL DB
@@ -211,25 +212,25 @@ def update_polar_plot(clickData, time_step_id):
         return {}
     
     # rolling smoothing of D
-    df["dir_smooth"] = df["spreading"].rolling(window=3, center=True, min_periods=1).mean()
-    
+    #df["dir_smooth"] = df["spreading"].rolling(window=3, center=True, min_periods=1).mean()
+    df["dir_smooth"] = gaussian_filter1d(df["spreading"], sigma=2)
     # build S = D * E(f) for the selected frequency
-    E = df["energy_density"].iloc[0]
-    df["S_raw"] = df["spreading"] * E
-    df["S_smooth"] = df["dir_smooth"] * E
+    #E = df["energy_density"].iloc[0]
+    #df["S_raw"] = df["spreading"] * E
+    #df["S_smooth"] = df["dir_smooth"] * E
 
     # interpolate to 1 degree resolution
-    fine_theta = np.arange(0, 360, 1)
-    interp_func = interp1d(df["direction"], df["S_smooth"], kind="linear", fill_value="extrapolate")
-    S_interp = interp_func(fine_theta)
+    #fine_theta = np.arange(0, 360, .5)
+    #interp_func = interp1d(df["direction"], df["S_smooth"], kind="linear", fill_value="extrapolate")
+    #S_interp = interp_func(fine_theta)
 
     #np.savetxt(r"D:\DirSpec\data\log.txt",df.values)
 
     # create the figure
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(
-        r = S_interp,
-        theta = fine_theta,
+        r = df['spreading'],
+        theta = df['direction'],
         mode = "lines",
         line = dict(color="royalblue", width=2),
         name = f"S(f={freq_bin:.3f})",

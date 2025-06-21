@@ -4,7 +4,7 @@ import psycopg2
 import psycopg2.extras
 import sys
 
-buoys = [46026, 41009]
+buoys = [46026, 41009, 41025]
 url = r'https://www.ndbc.noaa.gov/data/realtime2/'
 wpm_path = 'D:\DirSpec\data\WPM_spectra.xlsx'
 
@@ -295,7 +295,9 @@ def get_buoy_data():
             D = np.maximum(D, 0)
             
             row_sums = np.sum(D, axis=1, keepdims=True) * delta_theta_rad
+            # prevent division by 0
             row_sums[row_sums == 0] = 1
+            # normalize
             D_normalized = D / row_sums
             #check = np.sum(D_normalized, axis=1, keepdims=True) * delta_theta_rad
             #print(check)
@@ -326,9 +328,11 @@ def get_buoy_data():
             psycopg2.extras.execute_values(cur, spectra_parameters_insert_query, records_param, page_size=100)
 
             for m, f in enumerate(freqs):
-                for n, theta in enumerate(directional_pnts):
+                for n, theta in enumerate(directional_pnts_deg):
                     spreading = float(D[m, n])
-                    records_dir.append((int(timestep_id), float(f), int(theta), float(spreading)))
+                    records_dir.append((timestep_id, f, theta, spreading))
+
+            records_dir = [(int(timestep_id), float(f), int(theta), float(spreading)) for (timestep_id, f, theta, spreading) in records_dir]
 
             direction_insert_query = """
                 INSERT INTO spectra_directional (
@@ -363,8 +367,9 @@ center_freqs = pd.Series(wpm_data.iloc[:,1])
 freqs = np.array(center_freqs)
 bandwidths = pd.Series(wpm_data.iloc[:,2])
 
-# create 72 directional points to iterate over for NOAA buoys
-directional_pnts = np.arange(0,360,5)
+# create 360 directional points to iterate over for NOAA buoys
+directional_pnts_deg = np.arange(0,360,5)
+directional_pnts = np.deg2rad(directional_pnts_deg)
 theta_grid = directional_pnts[None, :]
 delta_theta_deg = 5
 delta_theta_rad = np.deg2rad(delta_theta_deg)
