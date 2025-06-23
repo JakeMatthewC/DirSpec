@@ -4,7 +4,7 @@ import psycopg2
 import psycopg2.extras
 import sys
 
-buoys = [46026, 44014, 41009, 41025]
+buoys = [42020]
 url = r'https://www.ndbc.noaa.gov/data/realtime2/'
 wpm_path = 'D:\DirSpec\data\WPM_spectra.xlsx'
 
