@@ -329,7 +329,7 @@ def get_buoy_data():
 
             for m, f in enumerate(freqs):
                 for n, theta in enumerate(directional_pnts_deg):
-                    spreading = float(D[m, n])
+                    spreading = float(D_normalized[m, n])
                     records_dir.append((timestep_id, f, theta, spreading))
 
             records_dir = [(int(timestep_id), float(f), int(theta), float(spreading)) for (timestep_id, f, theta, spreading) in records_dir]
