@@ -17,8 +17,8 @@ def build_sidebar(df_ts_param,station_id,station_name):
     for label, value in sidebar_data.items():
         val_str = "-" if value is None else f"{value:.2f}" if isinstance(value, (float, int)) else str(value)
         info_items.append(html.P(f"{label}: {val_str}"))
-        sidebar_out = html.Div([
+        sidebar_built = html.Div([
         html.H4(f"Station {station_id}: {station_name.iloc[0,0]}"), 
         *info_items
-    ])
-        return sidebar_out
+        ])
+    return sidebar_built

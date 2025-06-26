@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def build_spec_plot(df):
+def build_spec_plot(df,selected_freq):
     fig = make_subplots(rows=3, cols=1, 
         shared_xaxes=True, 
         subplot_titles=("Spectral Energy Density", "Directional Mean (α₁, α₂)", "Directional Spread (r₁, r₂)"),
@@ -29,4 +29,17 @@ def build_spec_plot(df):
     fig.update_yaxes(title_text="Ef (m²/Hz)", row=1, col=1, automargin=False)
     fig.update_yaxes(title_text="α values", row=2, col=1, automargin=False)
     fig.update_yaxes(title_text="r values", row=3, col=1, automargin=False)
+
+    if selected_freq:
+        fig.add_shape(
+            type="line",
+            x0=selected_freq,
+            x1=selected_freq,
+            y0=0,
+            y1=1,
+            line=dict(color="red", dash="dash"),
+            xref="x",
+            yref="paper",
+            layer="above"
+                )
     return fig

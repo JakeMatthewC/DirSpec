@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, text
 import pandas as pd
-import psycopg2
 
 CONN_STR = "postgresql+psycopg2://Jacob:@localhost:5432/postgres"
 

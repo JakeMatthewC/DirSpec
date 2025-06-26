@@ -292,7 +292,7 @@ def get_buoy_data():
             records = []
             for m, f in enumerate(freqs):
                 for n, theta in enumerate(directional_pnts):
-                    spreading = D[m, n]
+                    spreading = D_normalized[m, n]
                     energy_density = E[m, 0]
                     records.append((int(timestep_id), float(f), int(theta), float(spreading), float(energy_density)))
 

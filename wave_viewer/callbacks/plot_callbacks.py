@@ -37,20 +37,7 @@ def register_plot_callbacks(app):
             # build the data that goes to the sidebar
             sidebar_out = build_sidebar(df_ts_param,station_id,station_name)
 
-            fig = build_spec_plot(df)
-
-            if selected_freq:
-                fig.add_shape(
-                    type="line",
-                    x0=selected_freq,
-                    x1=selected_freq,
-                    y0=0,
-                    y1=1,
-                    line=dict(color="red", dash="dash"),
-                    xref="x",
-                    yref="paper",
-                    layer="above"
-                )
+            fig = build_spec_plot(df,selected_freq)
 
             return fig, sidebar_out
         else:
