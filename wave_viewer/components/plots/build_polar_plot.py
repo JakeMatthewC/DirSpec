@@ -19,7 +19,7 @@ def build_polar_plot(df,freq_bin):
     ))
 
     fig.update_layout(
-        title=f"Directional Distribution for f = {freq_bin:.3f} Hz",
+        title=f"Directional Spreading for f = {freq_bin:.3f} Hz",
         polar = dict(
             angularaxis= dict(
                 direction="clockwise", 

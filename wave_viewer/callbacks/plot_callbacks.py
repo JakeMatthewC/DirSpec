@@ -1,13 +1,14 @@
 from dash import Input, Output
+import numpy as np
 
 # queries
 import data.query as dq
+
 # components
 from components.sidebar.build_sidebar  import build_sidebar
 from components.plots.build_spectrum_plot import build_spec_plot
 from components.plots.build_polar_plot import build_polar_plot
 from components.empty_figs import empty_fig, empty_fig_spec
-
 
 def register_plot_callbacks(app):
     @app.callback(
@@ -32,7 +33,7 @@ def register_plot_callbacks(app):
 
         # fetch timestamp for plot titles
         if df.empty == False:
-            timestamp = dq.get_timestamp(timestep_id)
+            #timestamp = dq.get_timestamp(timestep_id)
             
             # build the data that goes to the sidebar
             sidebar_out = build_sidebar(df_ts_param,station_id,station_name)

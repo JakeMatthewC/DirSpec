@@ -2,6 +2,7 @@ import pandas as pd
 from dash import Input, Output
 from components.plots import build_spectrum_plot, build_polar_plot
 from sqlalchemy import create_engine, text
+from data.query import get_ts_data
 
 # create the dropdown for timestep selection and store selected buoy
 def register_map_callbacks(app):
@@ -17,25 +18,12 @@ def register_map_callbacks(app):
         
         station_id = clickData["points"][0]["customdata"][0]
 
-        CONN_STR = "postgresql+psycopg2://Jacob:@localhost:5432/postgres"
+        results = get_ts_data(station_id)
+        #sta_id_label = f"Selected station: {station_id}"
 
-        engine = create_engine(CONN_STR)
-        with engine.connect() as conn:
-            results = conn.execute(
-                text("""
-                SELECT ts.id, ts.timestamp
-                FROM time_steps ts
-                JOIN buoys b ON ts.buoy_id = b.id
-                WHERE b.station_id = :station_id
-                ORDER BY ts.timestamp DESC
-                """), {"station_id": station_id}
-            ).fetchall()
-
-            sta_id_label = f"Selected station: {station_id}"
-
-            options = [{"label": str(row[1].strftime("%Y-%m-%d %H:%M UTC")), "value": row[0]} for row in results]
-            default_value = options[0]["value"] if options else None
-            return options, default_value, station_id
+        options = [{"label": str(row[1].strftime("%Y-%m-%d %H:%M UTC")), "value": row[0]} for row in results]
+        default_value = options[0]["value"] if options else None
+        return options, default_value, station_id
 
     # this is to store the selected timestep into stored-timestep for grabbing spec data
     @app.callback(
