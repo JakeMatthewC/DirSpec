@@ -17,8 +17,8 @@ def build_spec_plot(df,selected_freq):
     fig.add_trace(go.Scatter(x=df["frequency"], y=df["energy_density"], mode='lines+markers', name='Ef', line=dict(color='royalblue')), row=1, col=1)
 
     # 2. α₁, α₂ vs Frequency
-    fig.add_trace(go.Scatter(x=df["frequency"], y=np.rad2deg(df["alpha1"]), mode='lines+markers', name='α₁', line=dict(color='orange')), row=2, col=1)
-    fig.add_trace(go.Scatter(x=df["frequency"], y=np.rad2deg(df["alpha2"]), mode='lines+markers', name='α₂', line=dict(color='green')), row=2, col=1)
+    fig.add_trace(go.Scatter(x=df["frequency"], y=df["alpha1"], mode='lines+markers', name='α₁', line=dict(color='orange')), row=2, col=1)
+    fig.add_trace(go.Scatter(x=df["frequency"], y=df["alpha2"], mode='lines+markers', name='α₂', line=dict(color='green')), row=2, col=1)
 
     # 3. r₁, r₂ vs Frequency
     fig.add_trace(go.Scatter(x=df["frequency"], y=df["r1"], mode='lines+markers', name='r₁', line=dict(color='red')), row=3, col=1)
