@@ -68,54 +68,38 @@ def register_plot_callbacks(app):
         # extract frequency bin from click
         freq_bin = clickData["points"][0]["x"]
 
-        # pull spectral data from database
-        df = dq.get_spectral_data(timestep_id,freq_bin)
+        # dirspec.spectra_directional is gone -- D(theta) is rebuilt from the
+        # stored Fourier parameters every time. One code path, so the plot can no
+        # longer disagree with what the pipeline computed.
+        spec_params = dq.get_spectral_parameters(timestep_id, freq_bin)
+        if spec_params.empty:
+            return empty_fig_spec, None
 
-        # if no return from database, build the polar plot on the fly
-        if df.empty:
+        row = spec_params.iloc[0]
 
-            # get the spectral parameters to calculate D
-            spec_params = dq.get_spectral_parameters(timestep_id, freq_bin)
+        D = u.reconstrust_directional_spectrum(
+            alpha1 = row["alpha1"],
+            alpha2 = row["alpha2"],
+            r1 = row["r1"],
+            r2 = row["r2"],
+            directions_deg = c.directional_pnts_deg
+        )
 
-            # if params are not available, return empty figure
-            if spec_params.empty:
-                return empty_fig_spec, None
+        # alpha/r are NULL for bins the buoy could not resolve, and MEM is
+        # undefined as r1 approaches 1
+        if D is None:
+            return empty_fig_spec, None
 
-            row = spec_params.iloc[0]
+        polar_df = pd.DataFrame({
+            "direction": c.directional_pnts_deg,
+            "spreading": D
+        })
 
-            # calculate D fro the polar plot
-            D = u.reconstrust_directional_spectrum(
-                alpha1 = row["alpha1"],
-                alpha2 = row["alpha2"],
-                r1 = row["r1"],
-                r2 = row["r2"],
-                directions_deg = c.directional_pnts_deg
-            )
-
-            # alpha/r are NULL for bins the buoy could not resolve
-            if D is None:
-                return empty_fig_spec, None
-
-            polar_df = pd.DataFrame({
-                "direction": c.directional_pnts_deg,
-                "spreading": D
-            })
-
-            fig = build_polar_plot(
-                polar_df,
-                freq_bin,
-                alpha1 = row["alpha1"],
-                energy_density = row["energy_density"],
-            )
-
-            return fig, freq_bin
-
-        # stored spectra_directional path; both paths produce identical D
         fig = build_polar_plot(
-            df,
+            polar_df,
             freq_bin,
-            alpha1 = df["alpha1"].iloc[0] if "alpha1" in df else None,
-            energy_density = df["energy_density"].iloc[0] if "energy_density" in df else None,
+            alpha1 = row["alpha1"],
+            energy_density = row["energy_density"],
         )
 
         return fig, freq_bin

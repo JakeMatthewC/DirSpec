@@ -17,9 +17,9 @@ def reconstrust_directional_spectrum(alpha1, alpha2, r1, r2, directions_deg,
 
     Uses the Maximum Entropy Method (Lygre & Krogstad 1986) via
     utils/directional.py, which is vendored verbatim from the ingest pipeline so
-    that an on-the-fly spectrum and a stored spectra_directional row for the same
-    timestep are identical. Do not reimplement the maths here -- the two copies
-    drifting apart is what produced the mirrored-spectrum bug.
+    that this viewer and the pipeline agree exactly. Do not reimplement the maths
+    here -- the two copies drifting apart is what produced the mirrored-spectrum
+    bug. D is no longer cached in the database; it is rebuilt on every request.
 
     No met->math conversion happens anywhere: alpha and the theta grid are both
     meteorological. Converting one without the other mirrors D about the 135/315

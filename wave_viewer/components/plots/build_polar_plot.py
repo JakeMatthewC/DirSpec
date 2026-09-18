@@ -57,20 +57,20 @@ def build_polar_plot(df, freq_bin, alpha1=None, energy_density=None):
             hovertemplate=f"α₁ = {float(alpha1):.0f}° (from)<extra></extra>",
         ))
 
+    # Subtitle goes in the title as a second line rather than a separate
+    # annotation: an annotation pinned at y=1.0 sits in the same band as the
+    # title and the two collided.
     period = (1.0 / freq_bin) if freq_bin else float("nan")
-    title = f"Directional spreading · f = {freq_bin:.3f} Hz (T = {period:.1f} s)"
-    subtitle = "waves travelling <b>from</b> the plotted bearing"
+    sub = "compass bearing waves arrive <b>from</b>"
     if energy_density is not None and np.isfinite(energy_density):
-        subtitle += f"  ·  E(f) = {float(energy_density):.3g} m²/Hz"
-
-    fig.add_annotation(
-        text=subtitle, xref="paper", yref="paper", x=0.5, y=1.0,
-        showarrow=False, font=dict(size=10, color="gray"), yanchor="bottom",
-    )
+        sub += f"  ·  E(f) = {float(energy_density):.3g} m²/Hz"
+    title = (f"Directional spreading · f = {freq_bin:.3f} Hz (T = {period:.1f} s)"
+             f"<br><span style='font-size:10px;color:gray'>{sub}</span>")
 
     tickvals = list(range(0, 360, 45))
     fig.update_layout(
-        title=dict(text=title, x=0.5, xanchor="center", font=dict(size=13)),
+        title=dict(text=title, x=0.5, xanchor="center", y=0.96, yanchor="top",
+                   font=dict(size=13)),
         polar=dict(
             bgcolor="rgba(0,0,0,0)",
             angularaxis=dict(
@@ -78,19 +78,24 @@ def build_polar_plot(df, freq_bin, alpha1=None, energy_density=None):
                 rotation=90,
                 tickmode="array",
                 tickvals=tickvals,
-                ticktext=[f"{_CARDINALS[t]}<br><span style='font-size:9px'>{t}°</span>"
-                          for t in tickvals],
+                # names only. The two-line "N" over "0°" form was tall enough to
+                # run into the ring and the radial labels; exact bearings are on
+                # hover, so the degrees were costing more than they gave.
+                ticktext=[_CARDINALS[t] for t in tickvals],
                 tickfont=dict(size=11),
                 gridcolor="rgba(0,0,0,0.12)",
                 linecolor="rgba(0,0,0,0.25)",
             ),
             radialaxis=dict(
                 showticklabels=True,
-                angle=90,
-                tickangle=90,
-                nticks=4,
+                # 22.5 deg puts the radial scale in the gap between the N and NE
+                # spokes. It was at 90, i.e. lying directly along north, straight
+                # through the "N" label -- that was the overlap.
+                angle=22.5,
+                tickangle=0,
+                nticks=3,
                 tickfont=dict(size=9, color="gray"),
-                ticks="outside",
+                ticks="",
                 showline=False,
                 showgrid=True,
                 gridcolor="rgba(0,0,0,0.10)",
@@ -99,6 +104,6 @@ def build_polar_plot(df, freq_bin, alpha1=None, energy_density=None):
             ),
         ),
         showlegend=False,
-        margin={"l": 40, "r": 40, "t": 60, "b": 40},
+        margin={"l": 45, "r": 45, "t": 72, "b": 45},
     )
     return fig

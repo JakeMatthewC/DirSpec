@@ -224,24 +224,8 @@ def get_ts_data(buoy_id):
 #         ).fetchall()
 #     return results
 
-def get_spectral_data(timestep_id, freq_bin):
-    with engine.connect() as conn:
-        df = pd.read_sql(
-            text("""
-            SELECT 
-                d.direction,
-                d.spreading,
-                p.energy_density,
-                p.alpha1
-            FROM dirspec.spectra_directional d
-            JOIN dirspec.spectra_parameters p
-                ON d.time_step_id = p.time_step_id
-                AND d.frequency = p.frequency
-            WHERE d.time_step_id = :ts
-            AND ABS(d.frequency - :f) < 0.000001
-            ORDER BY d.direction             
-        """), conn, params={"ts": timestep_id, "f": freq_bin})
-        return df
+# get_spectral_data() removed: dirspec.spectra_directional no longer exists.
+# D(theta) is reconstructed from get_spectral_parameters() on demand.
 
 def get_spectral_parameters(timestep_id, freq_bin):
     with engine.connect() as conn:
