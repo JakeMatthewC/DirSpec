@@ -20,7 +20,3 @@
 - Enhance UI/UX of the dashboard to give user more freedom in analysis
 - Train a ML model to generate idealized directional distributions for comparison to Fourier-based plots
 - Deploy dashboard online
-
-## Preview of work in progess
-
-![image](https://github.com/user-attachments/assets/dbbc5778-b7cd-47e4-a930-44d3f8bddcee)
