@@ -20,6 +20,7 @@ layout = html.Div(style={"height": "95vh", "display": "flex", "flexDirection": "
             #html.H2("Wave Buoy Map", style={"margin": "10px"}),
             dcc.Graph(id="buoy-map", figure=fig, style={"height": "100%", "width": "100%"}, config={"displayModeBar": False}),
             dcc.Store(id="stored-buoy"),
+            dcc.Store(id="stored-deployment"),
             dcc.Store(id="stored-timestep"),
             dcc.Store(id="stored-freq")
     ]),
@@ -37,14 +38,22 @@ layout = html.Div(style={"height": "95vh", "display": "flex", "flexDirection": "
         }, children=[
             # top section for timestep selection
             html.Div([
-                html.Label("Select Timestep:"),
+                html.Label("Select Deployment/Timestep:"),
                 dcc.Dropdown(
-                    id="timestep-dropdown", 
-                    placeholder="Choose a timestamp", 
-                    options=[],
-                    style={"width": "100%"},
-                    clearable=False
-                )
+                    id="deployment-dropdown",
+                    placeholder="Select deployment"
+                ),
+
+                dcc.DatePickerSingle(
+                    id="date-picker", 
+                    placeholder="Select date", 
+                    display_format="YYYY-MM-DD"
+                ),
+
+                dcc.Dropdown(
+                    id="timestep-dropdown",
+                    placeholder="Select time"
+                ),
             ]),
             # bottom for station stats
             html.Div(id="station-stats", children=[
